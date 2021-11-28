@@ -6,11 +6,10 @@ from flask import Flask, request
 app = Flask(__name__)
 producer = KafkaProducer(bootstrap_servers='kafka:29092')
 
-
 def log_to_kafka(topic, event):
     event.update(request.headers)
     producer.send(topic, json.dumps(event).encode())
-
+    
 
 @app.route("/")
 def default_response():
@@ -22,13 +21,14 @@ def default_response():
     return "What are you waiting for?\n"
 
 
-@app.route("/purchase_a_sword", methods=['POST','GET'])
+@app.route("/purchase_a_sword/", methods=['POST','GET'])
+def purchase_a_sword():
     """
     @function: This function generate a Purchase a Sword event from a user mobile device request or Apache Bench
     @param: User Request (via URL endpoint) 
     @return: Returns string of User Id and Event 
     """
-def purchase_a_sword():
+
     userid = request.args.get('userid', default='001', type=str)
     n = request.args.get('n',default=1,type=int)
     purchase_sword_event = {'userid':userid,
@@ -60,7 +60,7 @@ def join_guild():
     return "Joined" +" "+ guild_name +" "+ "Guild!\n"
 
 
-@app.route("/purchase_a_knife")
+@app.route("/purchase_a_knife/", methods=['POST','GET'])
 def purchase_a_knife():
     userid = request.args.get('userid', default='001', type=str)
     n = request.args.get('n',default=1,type=int)
@@ -73,7 +73,7 @@ def purchase_a_knife():
     log_to_kafka('events', purchase_knife_event)
     return "USER " + userid + ": "+ str(n)+" "+ " Kniefe(s) Purchased!\n"
 
-@app.route("/purchase_a_shield")
+@app.route("/purchase_a_shield/", methods=['POST','GET'])
 def purchase_a_shield():
     userid = request.args.get('userid', default='001', type=str)
     n = request.args.get('n',default=1,type=int)
