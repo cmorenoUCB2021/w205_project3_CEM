@@ -5,7 +5,7 @@
 helpFunction()
 {
    echo ""
-   echo "Welcome to mids 205 Project 3 synthetic data generator"
+   echo "Welcome CARLOS 2020 to mids 205 Project 3 synthetic data generator"
    echo "Usage: $0 -u NOOFUSERS -e ENDPOINTS -n GENERATEREQS"
    echo -e "\t-u Number of users"
    echo -e "\t-e Number of endpoints"
@@ -77,17 +77,18 @@ then
         case $EP in
             4)
               GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
-              case $GUILDID in
-                1)
-                docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
-                ;;
-                2)
-                docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Game%20of%20Thrones%27"
-                ;;
-                3)
-                docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Castle%20of%20Rock%27"
-                ;;
-              esac
+              docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n="$GUILDID
+#               case $GUILDID in
+#                 1)
+#                 docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
+#                 ;;
+#                 2)
+#                 docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27MYGUILD%27"
+#                 ;;
+#                 3)
+#                 docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27YOURGUILD%27"
+#                 ;;
+#               esac
         esac
         let REQS=REQS+1
     done
