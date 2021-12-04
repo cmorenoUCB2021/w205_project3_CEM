@@ -22,14 +22,16 @@ def purchase_events_schema():
         StructField('Accept', StringType(), True),
         StructField('Host', StringType(), True),
         StructField('User-Agent', StringType(), True),
-        StructField('price', LongType(), True),
+        StructField('price', StringType(), True),
         StructField('n_purchased', LongType(), True),
-        StructField('strength', LongType(), True),
+        StructField('strength', StringType(), True),
         StructField('name', StringType(), True),
         StructField('event_type', StringType(), True),
         StructField('userid', StringType(), True)
     ]
 )
+
+# LongType()
 
 def guild_events_schema():
     """
@@ -42,9 +44,9 @@ def guild_events_schema():
         StructField('Accept', StringType(), True),
         StructField('Host', StringType(), True),
         StructField('User-Agent', StringType(), True),
-        StructField('price', LongType(), True),
+        StructField('price', StringType(), True),
         StructField('n_purchased', LongType(), True),
-        StructField('strength', LongType(), True),
+        StructField('strength', StringType(), True),
         StructField('name', StringType(), True),
         StructField('event_type', StringType(), True),
         StructField('userid', StringType(), True)
@@ -126,7 +128,7 @@ def main():
                  ,F.col('userid') \
                  ,F.col('Host') \
                  ,F.col('event_type') \
-                ,F.col('name') \
+                 ,F.col('name') \
                  ,F.col('strength') \
                  ,F.col('n_purchased') \
                  ,F.col('price') \

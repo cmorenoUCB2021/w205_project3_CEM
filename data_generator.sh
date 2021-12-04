@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-# usage: ./data_generator.sh -u 15 -e 9 -n 100 -b
+# usage: ./data_generator.sh -u 15 -e 4 -n 100 -b
 
 helpFunction()
 {
@@ -61,23 +61,27 @@ then
         NOOFKNIFES=$(( ( RANDOM % $MAXNOOFKNIFES )  + 1 ))
         case $EP in
             1)
-            docker-compose mids exec ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_sword/?userid=%27user-00$ID%27&n="$NOOFSWORDS
+#            docker-compose mids exec ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_sword/?userid=%27user-00$ID%27&n="$NOOFSWORDS
+            docker-compose exec mids ab -n 5 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_sword/?userid=%27user-00$ID%27&n=$NOOFSWORDS"
             ;;
         esac
         case $EP in
             2)
-            docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_shield/?userid=%27user-00$ID%27&n="$NOOFSHIELDS
+#            docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_shield/?userid=%27user-00$ID%27&n="$NOOFSHIELDS
+            docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_shield/?userid=%27user-00$ID%27&n=$NOOFSHIELDS"
             ;;
         esac
         case $EP in
             3)
-            docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_knife/?userid=%27user-00$ID%27&n="$NOOFKNIFES
+#            docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_knife/?userid=%27user-00$ID%27&n="$NOOFKNIFES
+            docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_knife/?userid=%27user-00$ID%27&n=$NOOFKNIFES"
             ;;
         esac    
         case $EP in
             4)
               GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
-              docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n="$GUILDID
+#              docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n="$GUILDID
+              docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n=$GUILDID"
 #               case $GUILDID in
 #                 1)
 #                 docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
@@ -87,6 +91,9 @@ then
 #                 ;;
 #                 3)
 #                 docker-compose mids exec ab ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27YOURGUILD%27"
+
+#purchase_a_shield
+
 #                 ;;
 #               esac
         esac
@@ -116,19 +123,21 @@ else
         esac
         case $EP in
             4)
-              GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
-              case $GUILDID in
-                1)
-                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
-                ;;
-                2)
-                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name='Game of Thrones'"
-                ;;
-                3)
-                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name='Castle of Rock'"
-                ;;
-              esac
+            GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
+            docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n=$GUILDID"
+            ;;
         esac
         let REQS=REQS+1
     done
 fi
+#               case $GUILDID in
+#                 1)
+#                 docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
+#                 ;;
+#                 2)
+#                 docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name='Game of Thrones'"
+#                 ;;
+#                 3)
+#                 docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name='Castle of Rock'"
+#                 ;;
+#               esac
