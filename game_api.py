@@ -49,14 +49,14 @@ def join_guild():
     @return: Returns string of User Id and Event 
     """
     userid = request.args.get('userid', default='001', type=str)
-    #guild_name = request.args.get('guild_name', default="Knights of the Round Table", type=str)
+    guild_name = request.args.get('guild_name', default="Knights_of_the_Round_Table", type=str)
     n = request.args.get('n',default=1,type=int)
-    if n == 1:
-        guild_name = "Knights of the Round Table"
-    elif n == 2:
-        guild_name = "Game of Thrones"
-    else: 
-        guild_name = "Castle of Rock"
+#     if n == 1:
+#         guild_name = "Knights of the Round Table"
+#     elif n == 2:
+#         guild_name = "Game of Thrones"
+#     else: 
+#         guild_name = "Castle of Rock"
     join_guild_event = {'userid': userid,
                         'event_type': 'join_guild',
                         'name': guild_name,
@@ -86,7 +86,7 @@ def purchase_a_shield():
     
     userid = request.args.get('userid', default='001', type=str)
     n = request.args.get('n',default=1,type=int)
-    purchase_shield_event = {'userid': useride,
+    purchase_shield_event = {'userid': userid,
                              'event_type': 'purchase_shield',
                              'name': 'parma',
                              'strength': '800',

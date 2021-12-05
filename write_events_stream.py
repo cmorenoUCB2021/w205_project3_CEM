@@ -105,7 +105,8 @@ def main():
                           purchase_events_schema()).alias('json')) \
         .select('timestamp', 'json.*') \
         .select( \
-                  F.from_utc_timestamp(F.col('timestamp'),'GMT').alias('event_ts') \
+#                   F.from_utc_timestamp(F.col('timestamp'),'GMT').alias('event_ts') \
+                  F.col('timestamp').alias('event_ts') \
                  ,F.col('userid') \
                  ,F.col('Host') \
                  ,F.col('event_type') \
@@ -124,7 +125,8 @@ def main():
                           guild_events_schema()).alias('json')) \
         .select('timestamp', 'json.*') \
         .select( \
-                  F.from_utc_timestamp(F.col('timestamp'),'GMT').alias('event_ts') \
+#                   F.from_utc_timestamp(F.col('timestamp'),'GMT').alias('event_ts') \
+                  F.col('timestamp').alias('event_ts') \
                  ,F.col('userid') \
                  ,F.col('Host') \
                  ,F.col('event_type') \
