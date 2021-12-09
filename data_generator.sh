@@ -1,11 +1,11 @@
 #! /usr/bin/bash
 
-# usage: ./data_generator.sh -u 15 -e 9 -n 100 -b
+# usage: ./data_generator.sh -u 15 -e 4 -n 100 -b
 
 helpFunction()
 {
    echo ""
-   echo "Welcome to mids 205 Project 3 synthetic data generator"
+   echo "Welcome CARLOS 2020 to mids 205 Project 3 synthetic data generator"
    echo "Usage: $0 -u NOOFUSERS -e ENDPOINTS -n GENERATEREQS"
    echo -e "\t-u Number of users"
    echo -e "\t-e Number of endpoints"
@@ -36,8 +36,8 @@ fi
 ## ** Set limits to per user items
 REQS=0
 MAXNOOFSWORDS=10 # Max swords purchased at a time per user
-MAXNOOFSHIELDS=5 # max shields purchased at a time per user
-MAXNOOFKNIFES=100 # max potions purchased at a time per user
+MAXNOOFSHIELDS=10 # max shields purchased at a time per user
+MAXNOOFKNIFES=10 # max potions purchased at a time per user
 MAXGUILDS=3 # max number of guilds joined at a time per user
 CONCURRENTUSERS=1 #max users accessing the flask API (* Cannot use concurrency level greater than total number of requests [CONCURRENTUSERS < GENERATEREQS] )
 
@@ -61,31 +61,32 @@ then
         NOOFKNIFES=$(( ( RANDOM % $MAXNOOFKNIFES )  + 1 ))
         case $EP in
             1)
-            docker exec -it project-3-cmorenoUCB2021 ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_sword/?userid=%27user-00$ID%27&n="$NOOFSWORDS
+            docker-compose exec mids ab -n 5 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_sword/?userid=%27user-00$ID%27&n=$NOOFSWORDS"
             ;;
         esac
         case $EP in
             2)
-            docker exec -it project-3-cmorenoUCB2021 ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_shield/?userid=%27user-00$ID%27&n="$NOOFSHIELDS
+            docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_shield/?userid=%27user-00$ID%27&n=$NOOFSHIELDS"
             ;;
         esac
         case $EP in
             3)
-            docker exec -it project-3-cmorenoUCB2021 ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_knife/?userid=%27user-00$ID%27&n="$NOOFKNIFES
+            docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/purchase_a_knife/?userid=%27user-00$ID%27&n=$NOOFKNIFES"
             ;;
         esac    
         case $EP in
             4)
               GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
+                docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n="$GUILDID
               case $GUILDID in
                 1)
-                docker exec -it project-3-cmorenoUCB2021 ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
+                docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
                 ;;
                 2)
-                docker exec -it project-3-cmorenoUCB2021 ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Game%20of%20Thrones%27"
+                docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Game_of_Thrones%27"
                 ;;
                 3)
-                docker exec -it project-3-cmorenoUCB2021 ab -n 1 -c $CONCURRENTUSERS -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Castle%20of%20Rock%27"
+                docker-compose exec mids ab -n 4 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Castle_of_Rock%27"
                 ;;
               esac
         esac
@@ -110,23 +111,25 @@ else
         esac
         case $EP in
             3)
-            docker-compose exec mids curl "http://localhost:5000/purchase_a_knife/?userid=%27user-00$ID%27&n="$NOOFPOTIONS
+            docker-compose exec mids curl "http://localhost:5000/purchase_a_knife/?userid=%27user-00$ID%27&n="$NOOFKNIFES
             ;;
         esac
         case $EP in
             4)
-              GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
+            GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
+#             docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n=$GUILDID"
               case $GUILDID in
                 1)
                 docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
                 ;;
                 2)
-                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name='Game of Thrones'"
+                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Game_of_Thrones%27"
                 ;;
                 3)
-                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name='Castle of Rock'"
+                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Castle_of_Rock%27"
                 ;;
               esac
+            ;;
         esac
         let REQS=REQS+1
     done

@@ -22,9 +22,9 @@ def purchase_events_schema():
         StructField('Accept', StringType(), True),
         StructField('Host', StringType(), True),
         StructField('User-Agent', StringType(), True),
-        StructField('price', StringType(), True),
+        StructField('price', LongType(), True),
         StructField('n_purchased', LongType(), True),
-        StructField('strength', StringType(), True),
+        StructField('strength', LongType(), True),
         StructField('name', StringType(), True),
         StructField('event_type', StringType(), True),
         StructField('userid', StringType(), True)
@@ -44,14 +44,33 @@ def guild_events_schema():
         StructField('Accept', StringType(), True),
         StructField('Host', StringType(), True),
         StructField('User-Agent', StringType(), True),
-        StructField('price', StringType(), True),
+        StructField('price', LongType(), True),
         StructField('n_purchased', LongType(), True),
-        StructField('strength', StringType(), True),
+        StructField('strength', LongType(), True),
         StructField('name', StringType(), True),
         StructField('event_type', StringType(), True),
         StructField('userid', StringType(), True)
     ]
 )
+
+def fight_events_schema():
+    """
+    @function: This function provides the table schema for  fight events
+    @param: None 
+    @return: Returns the table schema for fight events 
+    """  
+    return StructType(
+    [
+        StructField('Accept', StringType(), True),
+        StructField('Host', StringType(), True),
+        StructField('User-Agent', StringType(), True),
+        StructField('score', LongType(), True),
+        StructField('win_status', StringType(), True),
+        StructField('event_type', StringType(), True),
+        StructField('userid', StringType(), True)
+    ]
+)
+
 
 @udf('boolean')
 def is_purchase(event_as_json):
@@ -74,6 +93,18 @@ def is_join_guild(event_as_json):
     """   
     event = json.loads(event_as_json)
     if event['event_type'] == 'join_guild':
+        return True
+    return False
+
+@udf('boolean')
+def is_fight_event(event_as_json):
+    """
+    @function: This function uses a json to filter out records by fight event type
+    @param: Takes in extracted json data as a string
+    @return: Returns a boolean value
+    """   
+    event = json.loads(event_as_json)
+    if event['event_type'] == 'fight_event':
         return True
     return False
 
@@ -136,6 +167,24 @@ def main():
                  ,F.col('price') \
                 ) \
         .distinct()
+
+    fight = raw_events \
+        .filter(is_fight_event(raw_events.value.cast('string'))) \
+        .select(raw_events.value.cast('string').alias('raw_event'),
+                raw_events.timestamp.cast('string'),
+                from_json(raw_events.value.cast('string'),
+                          fight_events_schema()).alias('json')) \
+        .select('timestamp', 'json.*') \
+        .select( \
+                  F.col('timestamp').alias('event_ts') \
+                 ,F.col('userid') \
+                 ,F.col('Host') \
+                 ,F.col('event_type') \
+                 ,F.col('score') \
+                 ,F.col('win_status') \
+                ) \
+        .distinct()
+    
     
     sink_purchases = purchases \
         .writeStream \
@@ -153,8 +202,17 @@ def main():
         .trigger(processingTime="10 seconds") \
         .start()
 
+    sink_fight = fight \
+        .writeStream \
+        .format("parquet") \
+        .option("checkpointLocation", "/tmp/checkpoints_for_fight_events") \
+        .option("path", "/tmp/fight_events") \
+        .trigger(processingTime="10 seconds") \
+        .start()
+        
     sink_purchases.awaitTermination()
     sink_guild.awaitTermination()
+    sink_fight.awaitTermination()
 
 
 if __name__ == "__main__":
