@@ -87,7 +87,7 @@ then
                 docker-compose exec mids ab -n 2 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Game_of_Thrones%27"
                 ;;
                 3)
-                docker-compose exec mids ab -n 2 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Castle_of_Rock%27"
+                docker-compose exec mids ab -n 2 -H "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Justice_League%27"
                 ;;
               esac
         esac
@@ -130,7 +130,6 @@ else
         case $EP in
             4)
             GUILDID=$(( ( RANDOM % $MAXGUILDS )  + 1 ))
-#             docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&n=$GUILDID"
               case $GUILDID in
                 1)
                 docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27"
@@ -139,7 +138,7 @@ else
                 docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Game_of_Thrones%27"
                 ;;
                 3)
-                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Castle_of_Rock%27"
+                docker-compose exec mids curl "Host: user-00$ID.comcast.com" "http://localhost:5000/join_guild/?userid=%27user-00$ID%27&guild_name=%27Justice_League%27"
                 ;;
               esac
         esac

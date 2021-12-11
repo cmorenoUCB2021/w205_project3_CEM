@@ -51,7 +51,7 @@ def join_guild():
     @return: Returns string of User Id and Event 
     """
     userid = request.args.get('userid', default='001', type=str)
-    guild_name = request.args.get('guild_name', default="'Knights_of_the_Round_Table'", type=str)
+    guild_name = request.args.get('guild_name', default="'The_Avengers'", type=str)
     n = request.args.get('n',default=1,type=int)
 
     if guild_name == "'Game_of_Thrones'":
@@ -73,7 +73,7 @@ def join_guild():
                         'n_purchased': 1,
                         'price': price}
     log_to_kafka('events', join_guild_event)
-    return "Joined" +" "+ guild_name +" "+ "Guild!\n"
+    return "USER: " + userid +" Joined" +" "+ guild_name +" "+ "Guild!\n"
 
 
 @app.route("/purchase_a_knife/", methods=['POST','GET'])
@@ -89,7 +89,7 @@ def purchase_a_knife():
                             'n_purchased': n,
                             'price': 1000}
     log_to_kafka('events', purchase_knife_event)
-    return "USER " + userid + ": "+ str(n)+" "+ " Kniefe(s) Purchased!\n"
+    return "USER " + userid + ": "+ str(n)+" "+ " Knife(s) Purchased!\n"
 
 
 @app.route("/purchase_a_shield/", methods=['POST','GET'])
