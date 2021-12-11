@@ -78,6 +78,11 @@ def join_guild():
 
 @app.route("/purchase_a_knife/", methods=['POST','GET'])
 def purchase_a_knife():
+    """
+    @function: This function generate a purchase knife event from a user mobile device request or Apache Bench
+    @param: User Request (via URL endpoint) 
+    @return: Returns string of User Id and Event 
+    """    
     userid = request.args.get('userid', default='001', type=str)
     n = request.args.get('n',default=1,type=int)
     userid = userid.replace("'", '')
@@ -94,7 +99,11 @@ def purchase_a_knife():
 
 @app.route("/purchase_a_shield/", methods=['POST','GET'])
 def purchase_a_shield():
-    
+    """
+    @function: This function generate a purchase shield event from a user mobile device request or Apache Bench
+    @param: User Request (via URL endpoint) 
+    @return: Returns string of User Id and Event 
+    """    
     userid = request.args.get('userid', default='001', type=str)
     n = request.args.get('n',default=1,type=int)
     userid = userid.replace("'", '')
@@ -111,7 +120,7 @@ def purchase_a_shield():
 @app.route("/fight_event/", methods=['POST','GET'])
 def fight_event():
     """
-    @function: This function generate a Join Guild event from a user mobile device request or Apache Bench
+    @function: This function generate a fight event from a user mobile device request or Apache Bench
     @param: User Request (via URL endpoint) 
     @return: Returns string of User Id and Event 
     """
