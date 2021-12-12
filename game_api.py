@@ -54,10 +54,12 @@ def join_guild():
     guild_name = request.args.get('guild_name', default="'The_Avengers'", type=str)
     n = request.args.get('n',default=1,type=int)
 
-    if guild_name == "'Game_of_Thrones'":
+    guild_name = guild_name.replace("'", '')
+
+    if guild_name == "Game_of_Thrones":
         price = 2000
         strength = 1500
-    elif guild_name == "'Castle_of_Rock'":
+    elif guild_name == "Justice_League":
         price = 1000
         strength = 1200
     else: 
@@ -65,7 +67,6 @@ def join_guild():
         strength = 5000
         
     userid = userid.replace("'", '')
-    guild_name = guild_name.replace("'", '')
     join_guild_event = {'userid': userid,
                         'event_type': 'join_guild',
                         'name': guild_name,
@@ -128,7 +129,9 @@ def fight_event():
     win_status = request.args.get('win_status', default="'won'", type=str)
     n = request.args.get('n',default=1,type=int)
 
-    if win_status == "'lost'":
+    win_status = win_status.replace("'", '')
+    
+    if win_status == "lost":
         score = -10
     else: 
         score = 100

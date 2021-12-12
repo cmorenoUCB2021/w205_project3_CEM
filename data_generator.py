@@ -5,10 +5,12 @@ import argparse
 import random
 import subprocess
 
-def join_castle_of_rock():
+# Sample command to run the file: python3 data_generator.py --num_users 3 --num_endpoints 5 --num_requests 30
+
+def join_justice_league(): 
     global param1, param2, docker_command
     param1 = "Host: user-00{0}.comcast.com".format(user_id)
-    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Castle%20of%20Rock%27".format(
+    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Justice_League%27".format(
         user_id)
     docker_command = 'docker-compose exec mids curl "%s" "%s"' % (param1, param2)
     return docker_command
@@ -16,7 +18,7 @@ def join_castle_of_rock():
 def join_game_of_thrones():
     global param1, param2, docker_command
     param1 = "Host: user-00{0}.comcast.com".format(user_id)
-    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Game%20of%20Thrones%27".format(
+    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Game_of_Thrones%27".format(
         user_id)
     docker_command = 'docker-compose exec mids curl "%s" "%s"' % (param1, param2)
     return docker_command
@@ -50,6 +52,19 @@ def purchase_swords():
     param1 = "http://localhost:5000/purchase_a_sword/?userid=%27user-00{0}%27&n={1}".format(user_id, num_swords)
     docker_command = 'docker-compose exec mids curl "%s"' % (param1)
     return docker_command
+
+def fight():
+    global param1, param2, docker_command
+    fight_event = random.uniform(0,1)
+    if fight_event > 0.5:
+        win_status = "won"
+    else:
+        win_status = "lost"
+    param1 = "Host: user-00{0}.comcast.com".format(user_id)
+    param2 = "http://localhost:5000/fight_event/?userid=%27user-00{0}%27&win_status={1}%27".format(user_id,win_status)
+    docker_command = 'docker-compose exec mids curl "%s" "%s"' % (param1, param2)
+    return docker_command
+
 
 
 if __name__ == "__main__":
@@ -91,10 +106,10 @@ import argparse
 import random
 import subprocess
 
-def join_castle_of_rock():
+def join_justice_league(): 
     global param1, param2, docker_command
     param1 = "Host: user-00{0}.comcast.com".format(user_id)
-    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Castle%20of%20Rock%27".format(
+    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Justice_League%27".format(
         user_id)
     docker_command = 'docker-compose exec mids curl "%s" "%s"' % (param1, param2)
     return docker_command
@@ -102,7 +117,7 @@ def join_castle_of_rock():
 def join_game_of_thrones():
     global param1, param2, docker_command
     param1 = "Host: user-00{0}.comcast.com".format(user_id)
-    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Game%20of%20Thrones%27".format(
+    param2 = "http://localhost:5000/join_guild/?userid=%27user-00{0}%27&guild_name=%27Game_of_Thrones%27".format(
         user_id)
     docker_command = 'docker-compose exec mids curl "%s" "%s"' % (param1, param2)
     return docker_command
@@ -135,6 +150,18 @@ def purchase_swords():
     global param1, docker_command
     param1 = "http://localhost:5000/purchase_a_sword/?userid=%27user-00{0}%27&n={1}".format(user_id, num_swords)
     docker_command = 'docker-compose exec mids curl "%s"' % (param1)
+    return docker_command
+
+def fight():
+    global param1, param2, docker_command
+    fight_event = random.uniform(0,1)
+    if fight_event > 0.5:
+        win_status = "won"
+    else:
+        win_status = "lost"
+    param1 = "Host: user-00{0}.comcast.com".format(user_id)
+    param2 = "http://localhost:5000/fight_event/?userid=%27user-00{0}%27&win_status={1}%27".format(user_id,win_status)
+    docker_command = 'docker-compose exec mids curl "%s" "%s"' % (param1, param2)
     return docker_command
 
 
@@ -189,6 +216,8 @@ if __name__ == "__main__":
             docker_command = purchase_shields()
         elif end_point == 3:
             docker_command = purchase_knives()
+        elif end_point == 4:
+            docker_command = fight()
         else:
             num_guilds = random.randint(1, 100000) % max_num_of_guilds + 1
             if num_guilds == 1:
@@ -196,7 +225,7 @@ if __name__ == "__main__":
             elif num_guilds == 2:
                 docker_command = join_game_of_thrones()
             elif num_guilds == 3:
-                docker_command = join_castle_of_rock()
+                docker_command = join_justice_league()
 
         print(docker_command)
         if docker_command not in guild_cache:
@@ -233,6 +262,11 @@ if __name__ == "__main__":
             subprocess.Popen(docker_command, shell=True, executable='/bin/bash',
                              stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT)
+        elif end_point == 4:
+            docker_command = fight()
+            subprocess.Popen(docker_command, shell=True, executable='/bin/bash',
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT)
         else:
             num_guilds = random.randint(1, 100000) % max_num_of_guilds + 1
             if num_guilds == 1:
@@ -240,7 +274,7 @@ if __name__ == "__main__":
             elif num_guilds == 2:
                 docker_command = join_game_of_thrones()
             elif num_guilds == 3:
-                docker_command = join_castle_of_rock()
+                docker_command = join_justice_league()
             
             if docker_command not in guild_cache:
                 print(docker_command)
